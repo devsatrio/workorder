@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:workorder/view/create.dart';
 import 'package:workorder/view/home.dart';
 import 'package:workorder/view/login.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(WorkOrderApp());
 }
 
