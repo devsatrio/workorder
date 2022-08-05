@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:workorder/constants/appcolors.dart'; 
+import 'package:shared_preferences/shared_preferences.dart';
 
-Future<bool> showExitPopup(context) async {
+Future<bool> showLogoutPopup(context) async {
+  final prefs = await SharedPreferences.getInstance();
   return await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -13,15 +15,15 @@ Future<bool> showExitPopup(context) async {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Do you want to exit?"),
+                    Text("Do you want to Logout ?"),
                     SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
-                              print('yes selected');
-                              exit(0);
+                            onPressed: () async {
+                              final success = await prefs.clear();
+                              Navigator.of(context).pushNamed('/loginpage');
                             },
                             style: ButtonStyle(backgroundColor: MaterialStateProperty.all(APP_COLOR)),
                             child: Text("Yes"),
