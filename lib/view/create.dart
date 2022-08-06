@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:select_form_field/select_form_field.dart';
 import 'package:workorder/constants/appcolors.dart';
+import 'package:workorder/services/todo_services.dart';
 
 class CreatePage extends StatefulWidget {
   const CreatePage({Key? key}) : super(key: key);
@@ -10,7 +12,20 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
+  late Future dataUnit;
+  late Future dataBarang;
+  List<Map<String, dynamic>> _items = [];
+  List<Map<String, dynamic>> _items_barang = [];
+  final List<Map<String, dynamic>> _items_status = [
+    {'value': 'selesai', 'label': 'Selesai'},
+    {'value': 'belum', 'label': 'Belum'},
+    {'value': 'proses', 'label': 'Proses'},
+    {'value': 'pending', 'label': 'Pending'},
+  ];
+
   TextEditingController tgl_order = TextEditingController();
+  TextEditingController tgl_pengerjaan = TextEditingController();
+  TextEditingController tgl_selesai = TextEditingController();
 
   Future getDateTime() async {
     DateTime? pickedDate = await showDatePicker(
@@ -27,17 +42,88 @@ class _CreatePageState extends State<CreatePage> {
       initialTime: TimeOfDay.now(),
       context: context,
     );
+    if (pickedDate != null && pickedTime != null) {
+      final date_tgl = DateTime(pickedDate.year, pickedDate.month,
+          pickedDate.day, pickedTime.hour, pickedTime.minute);
+      String formattedDateTime =
+          DateFormat('yyyy-MM-dd kk:mm').format(date_tgl);
+      setState(() {
+        tgl_order.text = formattedDateTime;
+      });
+    }
+  }
 
-    final date_tgl = DateTime(pickedDate!.year,pickedDate.month,pickedDate.day,pickedTime!.hour,pickedTime.minute);
-    String formattedDateTime = DateFormat('yyyy-MM-dd kk:mm').format(date_tgl);
-    setState(() {
-      tgl_order.text=formattedDateTime;
-    });
+  Future getDateTime_dua() async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101));
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      initialTime: TimeOfDay.now(),
+      context: context,
+    );
+    if (pickedDate != null && pickedTime != null) {
+      final date_tgl = DateTime(pickedDate.year, pickedDate.month,
+          pickedDate.day, pickedTime.hour, pickedTime.minute);
+      String formattedDateTime =
+          DateFormat('yyyy-MM-dd kk:mm').format(date_tgl);
+      setState(() {
+        tgl_pengerjaan.text = formattedDateTime;
+      });
+    }
+  }
+
+  Future getDateTime_tiga() async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101));
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      initialTime: TimeOfDay.now(),
+      context: context,
+    );
+    if (pickedDate != null && pickedTime != null) {
+      final date_tgl = DateTime(pickedDate.year, pickedDate.month,
+          pickedDate.day, pickedTime.hour, pickedTime.minute);
+      String formattedDateTime =
+          DateFormat('yyyy-MM-dd kk:mm').format(date_tgl);
+      setState(() {
+        tgl_selesai.text = formattedDateTime;
+      });
+    }
   }
 
   @override
   void initState() {
-    tgl_order.text = ""; //set the initial value of text field
+    dataUnit = TodoServices().getUnit();
+    dataBarang = TodoServices().getWorkList();
+    dataUnit.then((value) {
+      setState(() {
+        _items = value;
+      });
+    });
+    dataBarang.then((value) {
+      setState(() {
+        _items_barang = value;
+      });
+    });
+    DateTime now = DateTime.now();
+    String newDateNow = DateFormat('yyyy-MM-dd kk:mm').format(now);
+    tgl_order.text = newDateNow;
+    tgl_pengerjaan.text = newDateNow;
+    tgl_selesai.text = newDateNow;
     super.initState();
   }
 
@@ -74,10 +160,10 @@ class _CreatePageState extends State<CreatePage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40.0),
+                  SizedBox(height: 55.0),
                   Container(
                     alignment: Alignment.topRight,
-                    child: Padding(
+                    child: const Padding(
                         padding: EdgeInsets.only(right: 15),
                         child: Text('Make new to do data')),
                   ),
@@ -112,7 +198,13 @@ class _CreatePageState extends State<CreatePage> {
                               ),
                               onTap: getDateTime,
                             ),
-                            TextFormField(
+                            SelectFormField(
+                              type: SelectFormFieldType
+                                  .dropdown, // or can be dialog
+                              initialValue: '',
+                              items: _items,
+                              onChanged: (val) => print(val),
+                              onSaved: (val) => print(val),
                               decoration: const InputDecoration(
                                 labelText: 'Unit',
                                 focusedBorder: UnderlineInputBorder(
@@ -124,7 +216,13 @@ class _CreatePageState extends State<CreatePage> {
                                 ),
                               ),
                             ),
-                            TextFormField(
+                            SelectFormField(
+                              type: SelectFormFieldType
+                                  .dropdown, // or can be dialog
+                              initialValue: 'UNI.0092',
+                              items: _items,
+                              onChanged: (val) => print(val),
+                              onSaved: (val) => print(val),
                               decoration: const InputDecoration(
                                 labelText: 'Unit Tujuan',
                                 focusedBorder: UnderlineInputBorder(
@@ -136,9 +234,15 @@ class _CreatePageState extends State<CreatePage> {
                                 ),
                               ),
                             ),
-                            TextFormField(
+                            SelectFormField(
+                              type: SelectFormFieldType
+                                  .dropdown, // or can be dialog
+                              initialValue: '',
+                              items: _items_barang,
+                              onChanged: (val) => print(val),
+                              onSaved: (val) => print(val),
                               decoration: const InputDecoration(
-                                labelText: 'Nama Barang',
+                                labelText: 'Barang',
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
@@ -173,6 +277,8 @@ class _CreatePageState extends State<CreatePage> {
                               ),
                             ),
                             TextFormField(
+                              controller: tgl_pengerjaan,
+                              readOnly: true,
                               decoration: const InputDecoration(
                                 labelText: 'Tgl Pengerjaan',
                                 focusedBorder: UnderlineInputBorder(
@@ -183,6 +289,7 @@ class _CreatePageState extends State<CreatePage> {
                                   color: APP_COLOR,
                                 ),
                               ),
+                              onTap: getDateTime_dua,
                             ),
                             TextFormField(
                               decoration: const InputDecoration(
@@ -196,7 +303,13 @@ class _CreatePageState extends State<CreatePage> {
                                 ),
                               ),
                             ),
-                            TextFormField(
+                            SelectFormField(
+                              type: SelectFormFieldType
+                                  .dropdown, // or can be dialog
+                              initialValue: 'selesai',
+                              items: _items_status,
+                              onChanged: (val) => print(val),
+                              onSaved: (val) => print(val),
                               decoration: const InputDecoration(
                                 labelText: 'Status Pengerjaan',
                                 focusedBorder: UnderlineInputBorder(
@@ -209,6 +322,8 @@ class _CreatePageState extends State<CreatePage> {
                               ),
                             ),
                             TextFormField(
+                              controller: tgl_selesai,
+                              readOnly: true,
                               decoration: const InputDecoration(
                                 labelText: 'Tgl Selesai',
                                 focusedBorder: UnderlineInputBorder(
@@ -219,6 +334,7 @@ class _CreatePageState extends State<CreatePage> {
                                   color: APP_COLOR,
                                 ),
                               ),
+                              onTap: getDateTime_tiga,
                             ),
                             TextFormField(
                               decoration: const InputDecoration(

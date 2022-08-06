@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workorder/models/login_data.dart';
 
 class LoginServices {
-  static final String _baseUrl = 'http://192.168.3.51:8000';
+  static final String _baseUrl = 'http://192.168.5.31:8000';
 
   Future loginAct(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();

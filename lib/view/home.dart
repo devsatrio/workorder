@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40.0),
+                  SizedBox(height: 55.0),
                   Container(
                     alignment: Alignment.topRight,
                     child: Padding(
