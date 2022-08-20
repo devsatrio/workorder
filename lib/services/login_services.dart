@@ -6,10 +6,11 @@ import 'package:workorder/models/login_data.dart';
 
 class LoginServices {
   static final String _baseUrl = 'http://192.168.5.31:8000';
+  static final String _baseUrlUbuntu = 'http://192.168.211.134:8000';
 
   Future loginAct(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
-    Uri urlApi = Uri.parse(_baseUrl + '/login');
+    Uri urlApi = Uri.parse(_baseUrlUbuntu + '/login');
     try {
       final response = await http.post(urlApi,
           body: ({

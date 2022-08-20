@@ -14,8 +14,11 @@ class CreatePage extends StatefulWidget {
 class _CreatePageState extends State<CreatePage> {
   late Future dataUnit;
   late Future dataBarang;
+  late Future dataPelaksana;
+
   List<Map<String, dynamic>> _items = [];
   List<Map<String, dynamic>> _items_barang = [];
+  List<Map<String, dynamic>> _items_pelaksanan = [];
   final List<Map<String, dynamic>> _items_status = [
     {'value': 'selesai', 'label': 'Selesai'},
     {'value': 'belum', 'label': 'Belum'},
@@ -109,16 +112,26 @@ class _CreatePageState extends State<CreatePage> {
   void initState() {
     dataUnit = TodoServices().getUnit();
     dataBarang = TodoServices().getWorkList();
+    dataPelaksana = TodoServices().getPelaksana();
+
+    dataPelaksana.then((value) {
+      setState(() {
+        _items_pelaksanan = value;
+      });
+    });
+
     dataUnit.then((value) {
       setState(() {
         _items = value;
       });
     });
+
     dataBarang.then((value) {
       setState(() {
         _items_barang = value;
       });
     });
+
     DateTime now = DateTime.now();
     String newDateNow = DateFormat('yyyy-MM-dd kk:mm').format(now);
     tgl_order.text = newDateNow;
@@ -291,7 +304,13 @@ class _CreatePageState extends State<CreatePage> {
                               ),
                               onTap: getDateTime_dua,
                             ),
-                            TextFormField(
+                            SelectFormField(
+                              type: SelectFormFieldType
+                                  .dropdown, // or can be dialog
+                              initialValue: '',
+                              items: _items_pelaksanan,
+                              onChanged: (val) => print(val),
+                              onSaved: (val) => print(val),
                               decoration: const InputDecoration(
                                 labelText: 'Pelaksana',
                                 focusedBorder: UnderlineInputBorder(
@@ -351,22 +370,49 @@ class _CreatePageState extends State<CreatePage> {
                             SizedBox(
                               height: 20.0,
                             ),
-                            InkWell(
-                              onTap: () {},
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 50.0,
-                                decoration: BoxDecoration(
-                                  color: APP_COLOR,
-                                  borderRadius: BorderRadius.circular(32.0),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    "Login",
-                                    style: TextStyle(color: Colors.white),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed('/homepage');},
+                                  child: Container(
+                                    width: 130,
+                                    height: 50.0,
+                                    decoration: BoxDecoration(
+                                      color: APP_COLOR_DANGER,
+                                      borderRadius: BorderRadius.circular(32.0),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        "Cancel",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                                InkWell(
+                                  onTap: () {
+                                  },
+                                  child: Container(
+                                    width: 130,
+                                    height: 50.0,
+                                    decoration: BoxDecoration(
+                                      color: APP_COLOR,
+                                      borderRadius: BorderRadius.circular(32.0),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        "Simpan",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                           ],
                         ),
