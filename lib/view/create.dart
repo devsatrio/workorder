@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:workorder/constants/appcolors.dart';
+import 'package:workorder/models/pelaksanan_data.dart';
 import 'package:workorder/services/todo_services.dart';
 
 class CreatePage extends StatefulWidget {
@@ -18,7 +20,8 @@ class _CreatePageState extends State<CreatePage> {
 
   List<Map<String, dynamic>> _items = [];
   List<Map<String, dynamic>> _items_barang = [];
-  List<Map<String, dynamic>> _items_pelaksanan = [];
+  List<Object?> _selectedpelaksana = [];
+  late List<MultiSelectItem<Object?>> _items_pelaksanan = [];
   final List<Map<String, dynamic>> _items_status = [
     {'value': 'selesai', 'label': 'Selesai'},
     {'value': 'belum', 'label': 'Belum'},
@@ -173,14 +176,14 @@ class _CreatePageState extends State<CreatePage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 55.0),
+                  const SizedBox(height: 55.0),
                   Container(
                     alignment: Alignment.topRight,
                     child: const Padding(
                         padding: EdgeInsets.only(right: 15),
                         child: Text('Make new to do data')),
                   ),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   Container(
                     alignment: Alignment.topRight,
                     child: const Padding(
@@ -193,7 +196,7 @@ class _CreatePageState extends State<CreatePage> {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 25),
                         child: Column(
                           children: [
                             TextFormField(
@@ -205,7 +208,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.calendar_today_outlined,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -224,7 +227,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.location_city_rounded,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -242,7 +245,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.location_city_rounded,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -260,7 +263,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.category_rounded,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -272,7 +275,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.note_alt_outlined,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -284,7 +287,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.sentiment_dissatisfied,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -298,29 +301,11 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.calendar_today_outlined,
                                   color: APP_COLOR,
                                 ),
                               ),
                               onTap: getDateTime_dua,
-                            ),
-                            SelectFormField(
-                              type: SelectFormFieldType
-                                  .dropdown, // or can be dialog
-                              initialValue: '',
-                              items: _items_pelaksanan,
-                              onChanged: (val) => print(val),
-                              onSaved: (val) => print(val),
-                              decoration: const InputDecoration(
-                                labelText: 'Pelaksana',
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: APP_COLOR),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.perm_identity,
-                                  color: APP_COLOR,
-                                ),
-                              ),
                             ),
                             SelectFormField(
                               type: SelectFormFieldType
@@ -335,7 +320,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.turned_in_rounded,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -349,7 +334,7 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.calendar_today_outlined,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -362,12 +347,46 @@ class _CreatePageState extends State<CreatePage> {
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
                                 prefixIcon: Icon(
-                                  Icons.perm_identity,
+                                  Icons.note_alt_rounded,
                                   color: APP_COLOR,
                                 ),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            MultiSelectDialogField(
+                              items: _items_pelaksanan,
+                              title: Row(
+                                children: const [
+                                  Icon(Icons.group),
+                                  Text(' Pelaksana')
+                                ],
+                              ),
+                              selectedColor: APP_COLOR,
+                              buttonIcon: const Icon(
+                                Icons.group,
+                                color: APP_COLOR,
+                              ),
+                              buttonText: const Text(
+                                "Pilih Pelaksana",
+                                style: TextStyle(
+                                  color: APP_COLOR,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              onConfirm: (values) {
+                                _selectedpelaksana = values;
+                              },
+                              chipDisplay: MultiSelectChipDisplay(
+                                onTap: (value) {
+                                  setState(() {
+                                    _selectedpelaksana.remove(value);
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(
                               height: 20.0,
                             ),
                             Row(
@@ -375,7 +394,9 @@ class _CreatePageState extends State<CreatePage> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed('/homepage');},
+                                    Navigator.of(context)
+                                        .pushNamed('/homepage');
+                                  },
                                   child: Container(
                                     width: 130,
                                     height: 50.0,
@@ -392,8 +413,7 @@ class _CreatePageState extends State<CreatePage> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () {
-                                  },
+                                  onTap: () {},
                                   child: Container(
                                     width: 130,
                                     height: 50.0,
@@ -411,7 +431,7 @@ class _CreatePageState extends State<CreatePage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                           ],
