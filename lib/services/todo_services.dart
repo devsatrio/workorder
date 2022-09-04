@@ -23,7 +23,7 @@ class TodoServices {
 
   Future getUnit() async {
     List<Map<String, dynamic>> _newitems=[];
-    Uri urlApi = Uri.parse(_baseUrl + '/unit');
+    Uri urlApi = Uri.parse(_baseUrlUbuntu + '/unit');
     try {
       final response = await http.get(urlApi);
 
@@ -48,7 +48,7 @@ class TodoServices {
 
   Future getWorkList() async{
     List<Map<String, dynamic>> _newitems=[];
-    Uri urlApi = Uri.parse(_baseUrl + '/work_list');
+    Uri urlApi = Uri.parse(_baseUrlUbuntu + '/work_list');
     try {
       final response = await http.get(urlApi);
 
@@ -75,10 +75,9 @@ class TodoServices {
     List<DetailPelaksana> _items_pelaksana = [];
     List<MultiSelectItem<Object?>> final_items_pelaksanan =[];
     
-    Uri urlApi = Uri.parse(_baseUrl + '/work_pelaksana');
+    Uri urlApi = Uri.parse(_baseUrlUbuntu + '/work_pelaksana');
     try {
       final response = await http.get(urlApi);
-
       if (response.statusCode == 200) {
         var test = jsonDecode(response.body);
         var hasil = DataPelaksanan.fromJson(test);

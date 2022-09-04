@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:workorder/constants/appcolors.dart';
 import 'package:workorder/models/pelaksanan_data.dart';
@@ -32,13 +33,26 @@ class _CreatePageState extends State<CreatePage> {
   TextEditingController tgl_order = TextEditingController();
   TextEditingController tgl_pengerjaan = TextEditingController();
   TextEditingController tgl_selesai = TextEditingController();
-
+  String? unit_order = '';
+  String? unit_tujuan_order = '';
+  String? barang_order = '';
   Future getDateTime() async {
     DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: APP_COLOR, // <-- SEE HERE
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
 
     if (pickedDate != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -47,6 +61,16 @@ class _CreatePageState extends State<CreatePage> {
     TimeOfDay? pickedTime = await showTimePicker(
       initialTime: TimeOfDay.now(),
       context: context,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: APP_COLOR, // <-- SEE HERE
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (pickedDate != null && pickedTime != null) {
       final date_tgl = DateTime(pickedDate.year, pickedDate.month,
@@ -61,10 +85,21 @@ class _CreatePageState extends State<CreatePage> {
 
   Future getDateTime_dua() async {
     DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: APP_COLOR, // <-- SEE HERE
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
 
     if (pickedDate != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -73,6 +108,16 @@ class _CreatePageState extends State<CreatePage> {
     TimeOfDay? pickedTime = await showTimePicker(
       initialTime: TimeOfDay.now(),
       context: context,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: APP_COLOR, // <-- SEE HERE
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (pickedDate != null && pickedTime != null) {
       final date_tgl = DateTime(pickedDate.year, pickedDate.month,
@@ -87,10 +132,21 @@ class _CreatePageState extends State<CreatePage> {
 
   Future getDateTime_tiga() async {
     DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: APP_COLOR, // <-- SEE HERE
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
 
     if (pickedDate != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -99,6 +155,16 @@ class _CreatePageState extends State<CreatePage> {
     TimeOfDay? pickedTime = await showTimePicker(
       initialTime: TimeOfDay.now(),
       context: context,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: APP_COLOR, // <-- SEE HERE
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (pickedDate != null && pickedTime != null) {
       final date_tgl = DateTime(pickedDate.year, pickedDate.month,
@@ -219,8 +285,16 @@ class _CreatePageState extends State<CreatePage> {
                                   .dropdown, // or can be dialog
                               initialValue: '',
                               items: _items,
-                              onChanged: (val) => print(val),
-                              onSaved: (val) => print(val),
+                              onChanged: (val) {
+                                setState(() {
+                                  unit_order = val;
+                                });
+                              },
+                              onSaved: (val) {
+                                setState(() {
+                                  unit_order = val;
+                                });
+                              },
                               decoration: const InputDecoration(
                                 labelText: 'Unit',
                                 focusedBorder: UnderlineInputBorder(
@@ -237,8 +311,16 @@ class _CreatePageState extends State<CreatePage> {
                                   .dropdown, // or can be dialog
                               initialValue: 'UNI.0092',
                               items: _items,
-                              onChanged: (val) => print(val),
-                              onSaved: (val) => print(val),
+                              onChanged: (val) {
+                                setState(() {
+                                  unit_tujuan_order = val;
+                                });
+                              },
+                              onSaved: (val) {
+                                setState(() {
+                                  unit_tujuan_order = val;
+                                });
+                              },
                               decoration: const InputDecoration(
                                 labelText: 'Unit Tujuan',
                                 focusedBorder: UnderlineInputBorder(
@@ -255,8 +337,16 @@ class _CreatePageState extends State<CreatePage> {
                                   .dropdown, // or can be dialog
                               initialValue: '',
                               items: _items_barang,
-                              onChanged: (val) => print(val),
-                              onSaved: (val) => print(val),
+                              onChanged: (val) {
+                                setState(() {
+                                  barang_order = val;
+                                });
+                              },
+                              onSaved: (val) {
+                                setState(() {
+                                  barang_order = val;
+                                });
+                              },
                               decoration: const InputDecoration(
                                 labelText: 'Barang',
                                 focusedBorder: UnderlineInputBorder(
@@ -413,7 +503,34 @@ class _CreatePageState extends State<CreatePage> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    if (unit_order == '' ||
+                                        barang_order == '') {
+                                      Alert(
+                                        context: context,
+                                        type: AlertType.error,
+                                        style: const AlertStyle(
+                                          isCloseButton: false,
+                                        ),
+                                        title: "Oops, Data Kosong",
+                                        desc:
+                                            "Lengkapi semua data sebelum menyimpan",
+                                        buttons: [
+                                          DialogButton(
+                                            color: APP_COLOR,
+                                            child: const Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            ),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                          )
+                                        ],
+                                      ).show();
+                                    }
+                                  },
                                   child: Container(
                                     width: 130,
                                     height: 50.0,
