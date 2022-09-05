@@ -15,6 +15,7 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
+  bool showProgress = false;
   late Future dataUnit;
   late Future dataBarang;
   late Future dataPelaksana;
@@ -33,9 +34,16 @@ class _CreatePageState extends State<CreatePage> {
   TextEditingController tgl_order = TextEditingController();
   TextEditingController tgl_pengerjaan = TextEditingController();
   TextEditingController tgl_selesai = TextEditingController();
+  TextEditingController con_detail_barang_order = TextEditingController();
+  TextEditingController con_permasalahan = TextEditingController();
+  TextEditingController con_tindakan = TextEditingController();
+  TextEditingController con_catatan_petugas = TextEditingController();
+
   String? unit_order = '';
-  String? unit_tujuan_order = '';
+  String? unit_tujuan_order = 'UNI.0092-EDP';
   String? barang_order = '';
+  String? status_pengerjaan = 'Selesai';
+
   Future getDateTime() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -309,7 +317,7 @@ class _CreatePageState extends State<CreatePage> {
                             SelectFormField(
                               type: SelectFormFieldType
                                   .dropdown, // or can be dialog
-                              initialValue: 'UNI.0092',
+                              initialValue: 'UNI.0092-EDP',
                               items: _items,
                               onChanged: (val) {
                                 setState(() {
@@ -359,6 +367,7 @@ class _CreatePageState extends State<CreatePage> {
                               ),
                             ),
                             TextFormField(
+                              controller: con_detail_barang_order,
                               decoration: const InputDecoration(
                                 labelText: 'Detail Barang',
                                 focusedBorder: UnderlineInputBorder(
@@ -371,8 +380,22 @@ class _CreatePageState extends State<CreatePage> {
                               ),
                             ),
                             TextFormField(
+                              controller: con_permasalahan,
                               decoration: const InputDecoration(
                                 labelText: 'Permasalahan',
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: APP_COLOR),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.sentiment_dissatisfied,
+                                  color: APP_COLOR,
+                                ),
+                              ),
+                            ),
+                            TextFormField(
+                              controller: con_tindakan,
+                              decoration: const InputDecoration(
+                                labelText: 'Tindakan',
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
@@ -402,8 +425,16 @@ class _CreatePageState extends State<CreatePage> {
                                   .dropdown, // or can be dialog
                               initialValue: 'selesai',
                               items: _items_status,
-                              onChanged: (val) => print(val),
-                              onSaved: (val) => print(val),
+                              onChanged: (val) {
+                                setState(() {
+                                  status_pengerjaan = val;
+                                });
+                              },
+                              onSaved: (val) {
+                                setState(() {
+                                  status_pengerjaan = val;
+                                });
+                              },
                               decoration: const InputDecoration(
                                 labelText: 'Status Pengerjaan',
                                 focusedBorder: UnderlineInputBorder(
@@ -431,6 +462,7 @@ class _CreatePageState extends State<CreatePage> {
                               onTap: getDateTime_tiga,
                             ),
                             TextFormField(
+                              controller: con_catatan_petugas,
                               decoration: const InputDecoration(
                                 labelText: 'Catatan Petugas',
                                 focusedBorder: UnderlineInputBorder(
@@ -466,7 +498,9 @@ class _CreatePageState extends State<CreatePage> {
                                 ),
                               ),
                               onConfirm: (values) {
-                                _selectedpelaksana = values;
+                                setState(() {
+                                  _selectedpelaksana = values;
+                                });
                               },
                               chipDisplay: MultiSelectChipDisplay(
                                 onTap: (value) {
@@ -479,75 +513,157 @@ class _CreatePageState extends State<CreatePage> {
                             const SizedBox(
                               height: 20.0,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamed('/homepage');
-                                  },
-                                  child: Container(
-                                    width: 130,
-                                    height: 50.0,
-                                    decoration: BoxDecoration(
-                                      color: APP_COLOR_DANGER,
-                                      borderRadius: BorderRadius.circular(32.0),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    if (unit_order == '' ||
-                                        barang_order == '') {
-                                      Alert(
-                                        context: context,
-                                        type: AlertType.error,
-                                        style: const AlertStyle(
-                                          isCloseButton: false,
-                                        ),
-                                        title: "Oops, Data Kosong",
-                                        desc:
-                                            "Lengkapi semua data sebelum menyimpan",
-                                        buttons: [
-                                          DialogButton(
-                                            color: APP_COLOR,
-                                            child: const Text(
+                            showProgress
+                                ? const CircularProgressIndicator(
+                                    color: APP_COLOR,
+                                  )
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .pushNamed('/homepage');
+                                        },
+                                        child: Container(
+                                          width: 130,
+                                          height: 50.0,
+                                          decoration: BoxDecoration(
+                                            color: APP_COLOR_DANGER,
+                                            borderRadius:
+                                                BorderRadius.circular(32.0),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
                                               "Cancel",
                                               style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20),
+                                                  color: Colors.white),
                                             ),
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                          )
-                                        ],
-                                      ).show();
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 130,
-                                    height: 50.0,
-                                    decoration: BoxDecoration(
-                                      color: APP_COLOR,
-                                      borderRadius: BorderRadius.circular(32.0),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Simpan",
-                                        style: TextStyle(color: Colors.white),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      InkWell(
+                                        onTap: () {
+                                          if (tgl_order.text == '' ||
+                                              unit_order == '' ||
+                                              unit_tujuan_order == '' ||
+                                              barang_order == '' ||
+                                              con_detail_barang_order.text ==
+                                                  '' ||
+                                              con_permasalahan.text == '' ||
+                                              con_tindakan.text == '' ||
+                                              tgl_pengerjaan.text == '' ||
+                                              status_pengerjaan == '' ||
+                                              tgl_selesai.text == '' ||
+                                              con_catatan_petugas.text == '' ||
+                                              _selectedpelaksana.isEmpty) {
+                                            Alert(
+                                              context: context,
+                                              type: AlertType.error,
+                                              style: const AlertStyle(
+                                                isCloseButton: false,
+                                              ),
+                                              title: "Oops, Data Kosong",
+                                              desc:
+                                                  "Lengkapi semua data sebelum menyimpan",
+                                              buttons: [
+                                                DialogButton(
+                                                  color: APP_COLOR,
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                )
+                                              ],
+                                            ).show();
+                                          } else {
+                                            setState(() {
+                                              showProgress = true;
+                                            });
+                                            TodoServices()
+                                                .AddTodoAct(
+                                                    tgl_order.text,
+                                                    unit_order,
+                                                    unit_tujuan_order,
+                                                    barang_order,
+                                                    con_detail_barang_order
+                                                        .text,
+                                                    con_permasalahan.text,
+                                                    tgl_pengerjaan.text,
+                                                    _selectedpelaksana,
+                                                    con_tindakan.text,
+                                                    status_pengerjaan,
+                                                    tgl_selesai.text,
+                                                    con_catatan_petugas.text)
+                                                .then((value) {
+                                              if (value) {
+                                                Alert(
+                                                        style: const AlertStyle(
+                                                          isCloseButton: false,
+                                                        ),
+                                                        context: context,
+                                                        title: "Info",
+                                                        desc:
+                                                            "Data Berhasil Disimpan")
+                                                    .show();
+                                                Navigator.of(context)
+                                                    .pushNamed('/homepage');
+                                              } else {
+                                                setState(() {
+                                                  showProgress = false;
+                                                });
+
+                                                Alert(
+                                                  context: context,
+                                                  type: AlertType.error,
+                                                  style: const AlertStyle(
+                                                    isCloseButton: false,
+                                                  ),
+                                                  title: "Oops",
+                                                  desc: "Data Gagal Disimpan",
+                                                  buttons: [
+                                                    DialogButton(
+                                                      color: APP_COLOR,
+                                                      child: const Text(
+                                                        "Cancel",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                    )
+                                                  ],
+                                                ).show();
+                                              }
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                          width: 130,
+                                          height: 50.0,
+                                          decoration: BoxDecoration(
+                                            color: APP_COLOR,
+                                            borderRadius:
+                                                BorderRadius.circular(32.0),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                              "Simpan",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
                             const SizedBox(
                               height: 10,
                             ),

@@ -10,7 +10,7 @@ class LoginServices {
 
   Future loginAct(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
-    Uri urlApi = Uri.parse(_baseUrlUbuntu + '/login');
+    Uri urlApi = Uri.parse(_baseUrl + '/login');
     try {
       final response = await http.post(urlApi,
           body: ({
@@ -32,6 +32,7 @@ class LoginServices {
           return false;
         }
       } else {
+        response;
         return false;
       }
     } catch (e) {
