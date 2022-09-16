@@ -20,10 +20,11 @@ class DetailPelaksana {
 class TodoServices {
   static final String _baseUrl = 'http://192.168.3.62:8000';
   static final String _baseUrlUbuntu = 'http://192.168.211.134:8000';
+  static final String _finalBaseUrl = _baseUrlUbuntu;
 
   Future getUnit() async {
     List<Map<String, dynamic>> _newitems = [];
-    Uri urlApi = Uri.parse(_baseUrl + '/unit');
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/unit');
     try {
       final response = await http.get(urlApi);
 
@@ -49,7 +50,7 @@ class TodoServices {
 
   Future getWorkList() async {
     List<Map<String, dynamic>> _newitems = [];
-    Uri urlApi = Uri.parse(_baseUrl + '/work_list');
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/work_list');
     try {
       final response = await http.get(urlApi);
 
@@ -76,7 +77,7 @@ class TodoServices {
     List<DetailPelaksana> _items_pelaksana = [];
     List<MultiSelectItem<Object?>> final_items_pelaksanan = [];
 
-    Uri urlApi = Uri.parse(_baseUrl + '/work_pelaksana');
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/work_pelaksana');
     try {
       final response = await http.get(urlApi);
       if (response.statusCode == 200) {
@@ -116,7 +117,7 @@ class TodoServices {
       String? hasil,
       String tgl_finish,
       String catatan_petugas) async {
-    Uri urlApi = Uri.parse(_baseUrl + '/work_order');
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/work_order');
     String final_pelaksana = '';
     var map1 = Map.fromIterable(pelaksana, key: (e) => e.id, value: (e) => e.name);
     map1.forEach((key, value) { 
