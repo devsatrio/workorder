@@ -3,6 +3,7 @@ import 'package:workorder/view/create.dart';
 import 'package:workorder/view/home.dart';
 import 'package:workorder/view/login.dart';
 import 'package:flutter/services.dart';
+import 'package:workorder/view/today_todo.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ class _WorkOrderAppState extends State<WorkOrderApp> {
       initialRoute: '/homepage',
       routes: {
         '/homepage': (context) => HomePage(),
+        '/todaytodo':(context) => TodayTodo(),
         '/loginpage': (context) => LoginPage(),
         '/createpage': (context) => CreatePage(),
       },

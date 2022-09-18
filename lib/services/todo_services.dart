@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:workorder/models/barang_data.dart';
+import 'package:workorder/models/dashboard_data.dart';
 import 'package:workorder/models/login_data.dart';
 import 'package:workorder/models/pelaksanan_data.dart';
 import 'package:workorder/models/unit_data.dart';
+import 'package:workorder/models/work_order_data.dart';
 
 class DetailPelaksana {
   final int id;
@@ -19,8 +21,54 @@ class DetailPelaksana {
 
 class TodoServices {
   static final String _baseUrl = 'http://192.168.3.62:8000';
-  static final String _baseUrlUbuntu = 'http://192.168.211.134:8000';
+  static final String _baseUrlUbuntu = 'http://192.168.182.134:8000';
+  static final String _baseUrlLocal = 'http://10.210.103.166:8000';
   static final String _finalBaseUrl = _baseUrlUbuntu;
+
+Future getTodayOrder() async{
+  Uri urlApi = Uri.parse(_finalBaseUrl + '/today_order_list');
+    try {
+      final response = await http.get(urlApi);
+
+      if (response.statusCode == 200) {
+        var test = jsonDecode(response.body);
+        var hasil = data_work_order.fromJson(test);
+        if (hasil.sts == 'sukses') {
+          return hasil;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+}
+
+Future getDashboard() async {
+    DataDashboard datadashboard = new DataDashboard();
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/dashboard');
+    try {
+      final response = await http.get(urlApi);
+
+      if (response.statusCode == 200) {
+        var test = jsonDecode(response.body);
+        var hasil = DataDashboard.fromJson(test);
+        if (hasil.sts == 'sukses') {
+          datadashboard.orderFinishToday=hasil.orderFinishToday;
+          datadashboard.orderToday=hasil.orderToday;
+          return datadashboard;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
 
   Future getUnit() async {
     List<Map<String, dynamic>> _newitems = [];
