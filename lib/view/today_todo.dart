@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:workorder/constants/appcolors.dart';
+import 'package:workorder/models/detail_work_arg.dart';
 import 'package:workorder/models/work_order_data.dart';
 import 'package:workorder/services/todo_services.dart';
 
@@ -154,21 +155,82 @@ class _TodayTodoState extends State<TodayTodo> {
                                       child: const Center(
                                         child: Icon(Icons.more_vert_outlined),
                                       ),
+                                      onSelected: (value) {
+                                        if (value == 'detail') {
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/detailtodo',
+                                            arguments: DetailWorkArg(
+                                                listdata![index]
+                                                    .idwo
+                                                    .toString(),
+                                                listdata![index]
+                                                    .tglOrder
+                                                    .toString(),
+                                                listdata![index]
+                                                    .unitOrder
+                                                    .toString(),
+                                                listdata![index]
+                                                    .tujuan
+                                                    .toString(),
+                                                listdata![index]
+                                                    .kategori
+                                                    .toString(),
+                                                listdata![index]
+                                                    .jenis
+                                                    .toString(),
+                                                listdata![index]
+                                                    .namaBarang
+                                                    .toString(),
+                                                listdata![index]
+                                                    .detailBarang
+                                                    .toString(),
+                                                listdata![index]
+                                                    .permasalahan
+                                                    .toString(),
+                                                listdata![index]
+                                                    .status
+                                                    .toString(),
+                                                listdata![index]
+                                                    .tglExecute
+                                                    .toString(),
+                                                listdata![index]
+                                                    .pelaksana1
+                                                    .toString(),
+                                                listdata![index]
+                                                    .pelaksana2
+                                                    .toString(),
+                                                listdata![index]
+                                                    .pelaksana3
+                                                    .toString(),
+                                                listdata![index]
+                                                    .pelaksana4
+                                                    .toString(),
+                                                listdata![index]
+                                                    .tindakan
+                                                    .toString(),
+                                                listdata![index]
+                                                    .hasil
+                                                    .toString(),
+                                                listdata![index]
+                                                    .tglFinish
+                                                    .toString(),
+                                                listdata![index]
+                                                    .catatanPetugas
+                                                    .toString(),
+                                                listdata![index]
+                                                    .tglIn
+                                                    .toString(),
+                                                listdata![index]
+                                                    .msg
+                                                    .toString()),
+                                          );
+                                        }
+                                      },
                                       itemBuilder: (context) => [
                                         PopupMenuItem(
                                           value: 'detail',
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  '/detailtodo',
-                                                  arguments: ScreenArguments(
-                                                    'Extract Arguments Screen',
-                                                    'This message is extracted in the build method.',
-                                                  ),
-                                                );
-                                              },
-                                              child: Text('Detail')),
+                                          child: Text('Detail'),
                                         ),
                                         const PopupMenuItem(
                                           value: 'edit',
@@ -194,11 +256,4 @@ class _TodayTodoState extends State<TodayTodo> {
       ),
     );
   }
-}
-
-class ScreenArguments {
-  final String title;
-  final String message;
-
-  ScreenArguments(this.title, this.message);
 }

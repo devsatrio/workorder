@@ -23,7 +23,7 @@ class TodoServices {
   static final String _baseUrl = 'http://192.168.3.21:8000';
   static final String _baseUrlUbuntu = 'http://192.168.182.134:8000';
   static final String _baseUrlLocal = 'http://10.210.103.166:8000';
-  static final String _finalBaseUrl = _baseUrl;
+  static final String _finalBaseUrl = _baseUrlUbuntu;
 
 Future getTodayOrder() async{
   Uri urlApi = Uri.parse(_finalBaseUrl + '/today_order_list');
