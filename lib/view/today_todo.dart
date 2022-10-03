@@ -113,18 +113,16 @@ class _TodayTodoState extends State<TodayTodo> {
                                                     ? Colors.red
                                                     : Colors.blue,
                                         radius: 25,
-                                        child: listdata![index]
-                                                    .hasil
-                                                    .toString() ==
-                                                'selesai'
-                                            ? const Icon(Icons.done)
-                                            : listdata![index]
-                                                        .hasil
-                                                        .toString() ==
-                                                    'belum'
-                                                ? const Icon(Icons.close)
-                                                : const Icon(Icons
-                                                    .browse_gallery_rounded),
+                                        child:
+                                            listdata![index].hasil.toString() ==
+                                                    'selesai'
+                                                ? Icon(Icons.done)
+                                                : listdata![index]
+                                                            .hasil
+                                                            .toString() ==
+                                                        'belum'
+                                                    ? Icon(Icons.close)
+                                                    : Icon(Icons.ac_unit),
                                       ),
                                     ),
                                     Column(
@@ -153,14 +151,26 @@ class _TodayTodoState extends State<TodayTodo> {
                                       ],
                                     ),
                                     PopupMenuButton(
-                                      child: Center(
-                                          child:
-                                              Icon(Icons.more_vert_outlined)),
+                                      child: const Center(
+                                        child: Icon(Icons.more_vert_outlined),
+                                      ),
                                       itemBuilder: (context) => [
-                                        const PopupMenuItem(
+                                        PopupMenuItem(
                                           value: 'detail',
-                                          child: Text('Detail'),
-                                        ),const PopupMenuItem(
+                                          child: InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  '/detailtodo',
+                                                  arguments: ScreenArguments(
+                                                    'Extract Arguments Screen',
+                                                    'This message is extracted in the build method.',
+                                                  ),
+                                                );
+                                              },
+                                              child: Text('Detail')),
+                                        ),
+                                        const PopupMenuItem(
                                           value: 'edit',
                                           child: Text('Edit'),
                                         ),
@@ -184,4 +194,11 @@ class _TodayTodoState extends State<TodayTodo> {
       ),
     );
   }
+}
+
+class ScreenArguments {
+  final String title;
+  final String message;
+
+  ScreenArguments(this.title, this.message);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workorder/view/create.dart';
+import 'package:workorder/view/detail.dart';
 import 'package:workorder/view/home.dart';
 import 'package:workorder/view/login.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +38,7 @@ class _WorkOrderAppState extends State<WorkOrderApp> {
         '/todaytodo':(context) => TodayTodo(),
         '/loginpage': (context) => LoginPage(),
         '/createpage': (context) => CreatePage(),
+        '/detailtodo': (context) => detailTodo(),
       },
     );
   }
