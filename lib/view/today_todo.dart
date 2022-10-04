@@ -20,8 +20,61 @@ class _TodayTodoState extends State<TodayTodo> {
   data_work_order finaldatawork = new data_work_order();
   List<Data>? listdata = [];
 
-  @override
-  void initState() {
+  Future<bool> showDeletePopup(context, String idwo) async {
+    return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: SizedBox(
+                  height: 90,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Delete Data ?"),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                              Navigator.of(context).pop();
+                                showProgress = true;
+                                TodoServices()
+                                    .DeleteTodoAct(idwo)
+                                    .then((value) {
+                                showProgress = false;
+                                  get_data();
+                                });
+                              },
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(APP_COLOR)),
+                              child: const Text("Yes"),
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Expanded(
+                              child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("No",
+                                style: TextStyle(color: Colors.black)),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                            ),
+                          ))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }) ??
+        false;
+  }
+
+  void get_data() async {
     getdatawork = TodoServices().getTodayOrder();
     getdatawork.then((value) {
       setState(() {
@@ -30,6 +83,11 @@ class _TodayTodoState extends State<TodayTodo> {
         showProgress = false;
       });
     });
+  }
+
+  @override
+  void initState() {
+    get_data();
     super.initState();
   }
 
@@ -94,160 +152,177 @@ class _TodayTodoState extends State<TodayTodo> {
                             itemCount: listdata?.length,
                             itemBuilder: (context, index) {
                               return Card(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 15),
-                                      child: CircleAvatar(
-                                        backgroundColor:
-                                            listdata![index].hasil.toString() ==
-                                                    'selesai'
-                                                ? Colors.green
-                                                : listdata![index]
-                                                            .hasil
-                                                            .toString() ==
-                                                        'belum'
-                                                    ? Colors.red
-                                                    : Colors.blue,
-                                        radius: 25,
-                                        child:
-                                            listdata![index].hasil.toString() ==
-                                                    'selesai'
-                                                ? Icon(Icons.done)
-                                                : listdata![index]
-                                                            .hasil
-                                                            .toString() ==
-                                                        'belum'
-                                                    ? Icon(Icons.close)
-                                                    : Icon(Icons.ac_unit),
-                                      ),
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          listdata![index].unitOrder.toString(),
-                                          style: const TextStyle(
-                                              color: APP_COLOR,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(listdata![index]
-                                            .namaBarang
-                                            .toString()),
-                                        Text(listdata![index]
-                                            .permasalahan
-                                            .toString()),
-                                        Text("Tgl Order : " +
-                                            listdata![index]
-                                                .tglOrder
-                                                .toString()),
-                                      ],
-                                    ),
-                                    PopupMenuButton(
-                                      child: const Center(
-                                        child: Icon(Icons.more_vert_outlined),
-                                      ),
-                                      onSelected: (value) {
-                                        if (value == 'detail') {
-                                          Navigator.pushNamed(
-                                            context,
-                                            '/detailtodo',
-                                            arguments: DetailWorkArg(
-                                                listdata![index]
-                                                    .idwo
-                                                    .toString(),
-                                                listdata![index]
-                                                    .tglOrder
-                                                    .toString(),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: CircleAvatar(
+                                              backgroundColor: listdata![index]
+                                                          .hasil
+                                                          .toString() ==
+                                                      'selesai'
+                                                  ? Colors.green
+                                                  : listdata![index]
+                                                              .hasil
+                                                              .toString() ==
+                                                          'belum'
+                                                      ? Colors.red
+                                                      : Colors.blue,
+                                              radius: 25,
+                                              child: listdata![index]
+                                                          .hasil
+                                                          .toString() ==
+                                                      'selesai'
+                                                  ? Icon(Icons.done)
+                                                  : listdata![index]
+                                                              .hasil
+                                                              .toString() ==
+                                                          'belum'
+                                                      ? Icon(Icons.close)
+                                                      : Icon(Icons.ac_unit),
+                                            ),
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
                                                 listdata![index]
                                                     .unitOrder
                                                     .toString(),
-                                                listdata![index]
-                                                    .tujuan
-                                                    .toString(),
-                                                listdata![index]
-                                                    .kategori
-                                                    .toString(),
-                                                listdata![index]
-                                                    .jenis
-                                                    .toString(),
-                                                listdata![index]
-                                                    .namaBarang
-                                                    .toString(),
-                                                listdata![index]
-                                                    .detailBarang
-                                                    .toString(),
-                                                listdata![index]
-                                                    .permasalahan
-                                                    .toString(),
-                                                listdata![index]
-                                                    .status
-                                                    .toString(),
-                                                listdata![index]
-                                                    .tglExecute
-                                                    .toString(),
-                                                listdata![index]
-                                                    .pelaksana1
-                                                    .toString(),
-                                                listdata![index]
-                                                    .pelaksana2
-                                                    .toString(),
-                                                listdata![index]
-                                                    .pelaksana3
-                                                    .toString(),
-                                                listdata![index]
-                                                    .pelaksana4
-                                                    .toString(),
-                                                listdata![index]
-                                                    .tindakan
-                                                    .toString(),
-                                                listdata![index]
-                                                    .hasil
-                                                    .toString(),
-                                                listdata![index]
-                                                    .tglFinish
-                                                    .toString(),
-                                                listdata![index]
-                                                    .catatanPetugas
-                                                    .toString(),
-                                                listdata![index]
-                                                    .tglIn
-                                                    .toString(),
-                                                listdata![index]
-                                                    .msg
-                                                    .toString()),
-                                          );
-                                        }
-                                      },
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          value: 'detail',
-                                          child: Text('Detail'),
+                                                style: const TextStyle(
+                                                    color: APP_COLOR,
+                                                    fontSize: 17,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(listdata![index]
+                                                  .namaBarang
+                                                  .toString()),
+                                              Text(listdata![index]
+                                                  .permasalahan
+                                                  .toString()),
+                                              Text("Tgl Order : " +
+                                                  listdata![index]
+                                                      .tglOrder
+                                                      .toString()),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      PopupMenuButton(
+                                        child: const Center(
+                                          child: Icon(Icons.more_vert_outlined),
                                         ),
-                                        const PopupMenuItem(
-                                          value: 'edit',
-                                          child: Text('Edit'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 'delete',
-                                          child: Text('Delete'),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        onSelected: (value) {
+                                          if (value == 'detail') {
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/detailtodo',
+                                              arguments: DetailWorkArg(
+                                                  listdata![index]
+                                                      .idwo
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglOrder
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .unitOrder
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tujuan
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .kategori
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .jenis
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .namaBarang
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .detailBarang
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .permasalahan
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .status
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglExecute
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana1
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana2
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana3
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana4
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tindakan
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .hasil
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglFinish
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .catatanPetugas
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglIn
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .msg
+                                                      .toString()),
+                                            );
+                                          } else if (value == 'delete') {
+                                            showDeletePopup(
+                                                context,
+                                                listdata![index]
+                                                    .idwo
+                                                    .toString());
+                                          }
+                                        },
+                                        itemBuilder: (context) => [
+                                          const PopupMenuItem(
+                                            value: 'detail',
+                                            child: Text('Detail'),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 'edit',
+                                            child: Text('Edit'),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 'delete',
+                                            child: Text('Delete'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ));
+                              );
                             },
                           ),
-                  )
+                  ),
                 ],
               ),
             ),

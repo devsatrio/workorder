@@ -37,27 +37,7 @@ class _HomePageState extends State<HomePage> {
   void get_data_dashboard() async {
     datadashboardtoday = TodoServices().getDashboard();
     datadashboardtoday.then((value) {
-      if (value == null) {
-        Alert(
-          context: context,
-          type: AlertType.error,
-          style: const AlertStyle(
-            isCloseButton: false,
-          ),
-          title: "Oops",
-          desc: "Gagal Mengambil Data",
-          buttons: [
-            DialogButton(
-              color: APP_COLOR,
-              child: const Text(
-                "Cancel",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () => Navigator.pop(context),
-            )
-          ],
-        ).show();
-      } else {
+      if (value != null){
         dataDashboard = value;
         setState(() {
           order_hari_ini = dataDashboard.orderToday.toString();
@@ -256,19 +236,19 @@ class MenuSatu extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Today To Do List",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5.0,
                       ),
                       Text(
                         '$order_hari_ini To Do',
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white, fontWeight: FontWeight.w100),
                       )
                     ],

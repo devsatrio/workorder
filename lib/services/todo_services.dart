@@ -23,10 +23,10 @@ class TodoServices {
   static final String _baseUrl = 'http://192.168.3.21:8000';
   static final String _baseUrlUbuntu = 'http://192.168.182.134:8000';
   static final String _baseUrlLocal = 'http://10.210.103.166:8000';
-  static final String _finalBaseUrl = _baseUrlUbuntu;
+  static final String _finalBaseUrl = _baseUrl;
 
-Future getTodayOrder() async{
-  Uri urlApi = Uri.parse(_finalBaseUrl + '/today_order_list');
+  Future getTodayOrder() async {
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/today_order_list');
     try {
       final response = await http.get(urlApi);
 
@@ -44,9 +44,9 @@ Future getTodayOrder() async{
     } catch (e) {
       return null;
     }
-}
+  }
 
-Future getDashboard() async {
+  Future getDashboard() async {
     DataDashboard datadashboard = new DataDashboard();
     Uri urlApi = Uri.parse(_finalBaseUrl + '/dashboard');
     try {
@@ -56,8 +56,8 @@ Future getDashboard() async {
         var test = jsonDecode(response.body);
         var hasil = DataDashboard.fromJson(test);
         if (hasil.sts == 'sukses') {
-          datadashboard.orderFinishToday=hasil.orderFinishToday;
-          datadashboard.orderToday=hasil.orderToday;
+          datadashboard.orderFinishToday = hasil.orderFinishToday;
+          datadashboard.orderToday = hasil.orderToday;
           return datadashboard;
         } else {
           return null;
@@ -107,7 +107,8 @@ Future getDashboard() async {
         var hasil = DataBarang.fromJson(test);
         if (hasil.sts == 'sukses') {
           for (var row in test['data']) {
-            _newitems.add({'value': row['jenis_work'], 'label': row['jenis_work']});
+            _newitems
+                .add({'value': row['jenis_work'], 'label': row['jenis_work']});
           }
           return _newitems;
         } else {
@@ -167,9 +168,10 @@ Future getDashboard() async {
       String catatan_petugas) async {
     Uri urlApi = Uri.parse(_finalBaseUrl + '/work_order');
     String final_pelaksana = '';
-    var map1 = Map.fromIterable(pelaksana, key: (e) => e.id, value: (e) => e.name);
-    map1.forEach((key, value) { 
-      final_pelaksana = final_pelaksana+','+value.toString();
+    var map1 =
+        Map.fromIterable(pelaksana, key: (e) => e.id, value: (e) => e.name);
+    map1.forEach((key, value) {
+      final_pelaksana = final_pelaksana + ',' + value.toString();
     });
     try {
       final response = await http.post(urlApi,
@@ -197,7 +199,29 @@ Future getDashboard() async {
           return false;
         }
       } else {
-        print(response.body.toString());
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future DeleteTodoAct(String idwo) async {
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/work_order/delete');
+    try {
+      final response = await http.post(urlApi,
+          body: ({
+            "idwo": idwo,
+          }));
+      if (response.statusCode == 200) {
+        var test = jsonDecode(response.body);
+        var hasil = logindata.fromJson(test);
+        if (hasil.sts == 'sukses') {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
         return false;
       }
     } catch (e) {
