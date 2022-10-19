@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:workorder/constants/appcolors.dart';
-import 'package:workorder/models/pelaksanan_data.dart';
 import 'package:workorder/services/todo_services.dart';
 
-class CreatePage extends StatefulWidget {
-  const CreatePage({Key? key}) : super(key: key);
+class EditPage extends StatefulWidget {
+  const EditPage({Key? key}) : super(key: key);
 
   @override
-  State<CreatePage> createState() => _CreatePageState();
+  State<EditPage> createState() => _EditPageState();
 }
 
-class _CreatePageState extends State<CreatePage> {
+class _EditPageState extends State<EditPage> {
   bool showProgress = false;
   late Future dataUnit;
   late Future dataBarang;
@@ -90,6 +88,8 @@ class _CreatePageState extends State<CreatePage> {
       });
     }
   }
+
+
 
   Future getDateTime_dua() async {
     DateTime? pickedDate = await showDatePicker(
@@ -185,6 +185,7 @@ class _CreatePageState extends State<CreatePage> {
     }
   }
 
+
   @override
   void initState() {
     dataUnit = TodoServices().getUnit();
@@ -261,11 +262,12 @@ class _CreatePageState extends State<CreatePage> {
                   Container(
                     alignment: Alignment.topRight,
                     child: const Padding(
-                        padding: EdgeInsets.only(right: 15),
-                        child: Text(
-                          'Add To Do',
-                          style: TextStyle(fontSize: 25, color: APP_COLOR),
-                        )),
+                      padding: EdgeInsets.only(right: 15),
+                      child: Text(
+                        'Edit To Do',
+                        style: TextStyle(fontSize: 25, color: APP_COLOR),
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -391,8 +393,7 @@ class _CreatePageState extends State<CreatePage> {
                                   color: APP_COLOR,
                                 ),
                               ),
-                            ),
-                            TextFormField(
+                            ),TextFormField(
                               controller: con_tindakan,
                               decoration: const InputDecoration(
                                 labelText: 'Tindakan',
@@ -419,32 +420,6 @@ class _CreatePageState extends State<CreatePage> {
                                 ),
                               ),
                               onTap: getDateTime_dua,
-                            ),
-                            SelectFormField(
-                              type: SelectFormFieldType
-                                  .dropdown, // or can be dialog
-                              initialValue: 'selesai',
-                              items: _items_status,
-                              onChanged: (val) {
-                                setState(() {
-                                  status_pengerjaan = val;
-                                });
-                              },
-                              onSaved: (val) {
-                                setState(() {
-                                  status_pengerjaan = val;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'Status Pengerjaan',
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: APP_COLOR),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.turned_in_rounded,
-                                  color: APP_COLOR,
-                                ),
-                              ),
                             ),
                             TextFormField(
                               controller: tgl_selesai,
@@ -545,105 +520,6 @@ class _CreatePageState extends State<CreatePage> {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          if (tgl_order.text == '' ||
-                                              unit_order == '' ||
-                                              unit_tujuan_order == '' ||
-                                              barang_order == '' ||
-                                              con_detail_barang_order.text ==
-                                                  '' ||
-                                              con_permasalahan.text == '' ||
-                                              con_tindakan.text == '' ||
-                                              tgl_pengerjaan.text == '' ||
-                                              status_pengerjaan == '' ||
-                                              tgl_selesai.text == '' ||
-                                              con_catatan_petugas.text == '' ||
-                                              _selectedpelaksana.isEmpty) {
-                                            Alert(
-                                              context: context,
-                                              type: AlertType.error,
-                                              style: const AlertStyle(
-                                                isCloseButton: false,
-                                              ),
-                                              title: "Oops, Data Kosong",
-                                              desc:
-                                                  "Lengkapi semua data sebelum menyimpan",
-                                              buttons: [
-                                                DialogButton(
-                                                  color: APP_COLOR,
-                                                  child: const Text(
-                                                    "Cancel",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20),
-                                                  ),
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                )
-                                              ],
-                                            ).show();
-                                          } else {
-                                            setState(() {
-                                              showProgress = true;
-                                            });
-                                            TodoServices()
-                                                .AddTodoAct(
-                                                    tgl_order.text,
-                                                    unit_order,
-                                                    unit_tujuan_order,
-                                                    barang_order,
-                                                    con_detail_barang_order
-                                                        .text,
-                                                    con_permasalahan.text,
-                                                    tgl_pengerjaan.text,
-                                                    _selectedpelaksana,
-                                                    con_tindakan.text,
-                                                    status_pengerjaan,
-                                                    tgl_selesai.text,
-                                                    con_catatan_petugas.text)
-                                                .then((value) {
-                                              if (value) {
-                                                Alert(
-                                                        style: const AlertStyle(
-                                                          isCloseButton: false,
-                                                        ),
-                                                        context: context,
-                                                        title: "Info",
-                                                        desc:
-                                                            "Data Berhasil Disimpan")
-                                                    .show();
-                                                Navigator.of(context)
-                                                    .pushNamed('/homepage');
-                                              } else {
-                                                setState(() {
-                                                  showProgress = false;
-                                                });
-
-                                                Alert(
-                                                  context: context,
-                                                  type: AlertType.error,
-                                                  style: const AlertStyle(
-                                                    isCloseButton: false,
-                                                  ),
-                                                  title: "Oops",
-                                                  desc: "Data Gagal Disimpan",
-                                                  buttons: [
-                                                    DialogButton(
-                                                      color: APP_COLOR,
-                                                      child: const Text(
-                                                        "Cancel",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 20),
-                                                      ),
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              context),
-                                                    )
-                                                  ],
-                                                ).show();
-                                              }
-                                            });
-                                          }
                                         },
                                         child: Container(
                                           width: 130,
@@ -675,7 +551,7 @@ class _CreatePageState extends State<CreatePage> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

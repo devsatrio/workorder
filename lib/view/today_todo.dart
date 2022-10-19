@@ -299,6 +299,8 @@ class _TodayTodoState extends State<TodayTodo> {
                                                 listdata![index]
                                                     .idwo
                                                     .toString());
+                                          }else if(value=='edit'){
+                                            Navigator.of(context).pushNamed('/edittodo');
                                           }
                                         },
                                         itemBuilder: (context) => [

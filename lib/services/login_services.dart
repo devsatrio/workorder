@@ -6,9 +6,9 @@ import 'package:workorder/models/login_data.dart';
 
 class LoginServices {
   static final String _baseUrl = 'http://192.168.3.21:8000';
-  static final String _baseUrlUbuntu = 'http://192.168.182.134:8000';
+  static final String _baseUrlUbuntu = 'http://192.168.222.134:8000';
   static final String _baseUrlLocal = 'http://10.210.103.166:8000';
-  static final String _finalBaseUrl = _baseUrl;
+  static final String _finalBaseUrl = _baseUrlUbuntu;
 
   Future loginAct(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
