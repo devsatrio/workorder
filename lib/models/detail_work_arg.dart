@@ -1,5 +1,6 @@
 class DetailWorkArg {
   final String idwo;
+  final String idunitorder;
   final String tglOrder;
   final String unitOrder;
   final String tujuan;
@@ -23,6 +24,7 @@ class DetailWorkArg {
 
   DetailWorkArg(
     this.idwo,
+    this.idunitorder,
     this.tglOrder,
     this.unitOrder,
     this.tujuan,

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:workorder/constants/appcolors.dart';
+import 'package:workorder/models/detail_work_arg.dart';
 import 'package:workorder/services/todo_services.dart';
 
 class EditPage extends StatefulWidget {
@@ -13,6 +14,7 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
+  
   bool showProgress = false;
   late Future dataUnit;
   late Future dataBarang;
@@ -21,6 +23,7 @@ class _EditPageState extends State<EditPage> {
   List<Map<String, dynamic>> _items = [];
   List<Map<String, dynamic>> _items_barang = [];
   List<Object?> _selectedpelaksana = [];
+  List<Object?> _initialpelaksana = [];
   late List<MultiSelectItem<Object?>> _items_pelaksanan = [];
   final List<Map<String, dynamic>> _items_status = [
     {'value': 'selesai', 'label': 'Selesai'},
@@ -41,6 +44,25 @@ class _EditPageState extends State<EditPage> {
   String? unit_tujuan_order = 'UNI.0092-EDP';
   String? barang_order = '';
   String? status_pengerjaan = 'Selesai';
+  late DetailWorkArg args_dua;
+
+  _yourFunction(argumenya) async {
+    List<DetailPelaksana> _items_pelaksana = [];
+    List<MultiSelectItem<Object?>> final_items_pelaksanan = [];
+    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana1, name: argumenya.pelaksana1));
+    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana2, name: argumenya.pelaksana2));
+    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana3, name: argumenya.pelaksana3));
+    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana4, name: argumenya.pelaksana4));
+          
+    final_items_pelaksanan = _items_pelaksana
+        .map((pelaksana) =>
+            MultiSelectItem<DetailPelaksana>(pelaksana, pelaksana.name))
+        .toList();
+    setState(() {
+      _initialpelaksana=_items_pelaksana;
+    });
+    print(_initialpelaksana);
+  }
 
   Future getDateTime() async {
     DateTime? pickedDate = await showDatePicker(
@@ -88,8 +110,6 @@ class _EditPageState extends State<EditPage> {
       });
     }
   }
-
-
 
   Future getDateTime_dua() async {
     DateTime? pickedDate = await showDatePicker(
@@ -216,10 +236,25 @@ class _EditPageState extends State<EditPage> {
     tgl_pengerjaan.text = newDateNow;
     tgl_selesai.text = newDateNow;
     super.initState();
+     
   }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as DetailWorkArg;
+    tgl_order.text=args.tglOrder;
+    con_detail_barang_order.text=args.detailBarang;
+    con_permasalahan.text = args.permasalahan;
+    con_tindakan.text=args.tindakan;
+    tgl_pengerjaan.text=args.tglExecute;
+    tgl_selesai.text=args.tglFinish;
+    con_catatan_petugas.text = args.catatanPetugas;
+    Future.delayed(Duration.zero, () {
+          setState(() {
+            args_dua = ModalRoute.of(context)!.settings.arguments as DetailWorkArg;
+          });
+          _yourFunction(args_dua);
+        });
     return Scaffold(
       body: Stack(
         children: [
@@ -293,7 +328,7 @@ class _EditPageState extends State<EditPage> {
                             SelectFormField(
                               type: SelectFormFieldType
                                   .dropdown, // or can be dialog
-                              initialValue: '',
+                              initialValue: args.idunitorder+ '-'+args.unitOrder,
                               items: _items,
                               onChanged: (val) {
                                 setState(() {
@@ -345,7 +380,7 @@ class _EditPageState extends State<EditPage> {
                             SelectFormField(
                               type: SelectFormFieldType
                                   .dropdown, // or can be dialog
-                              initialValue: '',
+                              initialValue: args.namaBarang,
                               items: _items_barang,
                               onChanged: (val) {
                                 setState(() {
@@ -454,6 +489,7 @@ class _EditPageState extends State<EditPage> {
                             ),
                             MultiSelectDialogField(
                               items: _items_pelaksanan,
+                              initialValue: [DetailPelaksana(nama: args.pelaksana1, name: args.pelaksana1)],
                               title: Row(
                                 children: const [
                                   Icon(Icons.group),

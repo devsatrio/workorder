@@ -37,12 +37,12 @@ class _TodayTodoState extends State<TodayTodo> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                              Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                                 showProgress = true;
                                 TodoServices()
                                     .DeleteTodoAct(idwo)
                                     .then((value) {
-                                showProgress = false;
+                                  showProgress = false;
                                   get_data();
                                 });
                               },
@@ -233,6 +233,9 @@ class _TodayTodoState extends State<TodayTodo> {
                                                       .idwo
                                                       .toString(),
                                                   listdata![index]
+                                                      .idUnit
+                                                      .toString(),
+                                                  listdata![index]
                                                       .tglOrder
                                                       .toString(),
                                                   listdata![index]
@@ -299,8 +302,78 @@ class _TodayTodoState extends State<TodayTodo> {
                                                 listdata![index]
                                                     .idwo
                                                     .toString());
-                                          }else if(value=='edit'){
-                                            Navigator.of(context).pushNamed('/edittodo');
+                                          } else if (value == 'edit') {
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/edittodo',
+                                              arguments: DetailWorkArg(
+                                                  listdata![index]
+                                                      .idwo
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .idUnit
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglOrder
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .unitOrder
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tujuan
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .kategori
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .jenis
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .namaBarang
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .detailBarang
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .permasalahan
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .status
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglExecute
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana1
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana2
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana3
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .pelaksana4
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tindakan
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .hasil
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglFinish
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .catatanPetugas
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .tglIn
+                                                      .toString(),
+                                                  listdata![index]
+                                                      .msg
+                                                      .toString()),
+                                            );
                                           }
                                         },
                                         itemBuilder: (context) => [

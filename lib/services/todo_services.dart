@@ -10,20 +10,20 @@ import 'package:workorder/models/unit_data.dart';
 import 'package:workorder/models/work_order_data.dart';
 
 class DetailPelaksana {
-  final int id;
+  final String nama;
   final String name;
 
   DetailPelaksana({
-    required this.id,
+    required this.nama,
     required this.name,
   });
 }
 
 class TodoServices {
-  static final String _baseUrl = 'http://192.168.3.21:8000';
+  static final String _baseUrl = 'http://192.168.3.4:8000';
   static final String _baseUrlUbuntu = 'http://192.168.222.134:8000';
-  static final String _baseUrlLocal = 'http://10.210.103.166:8000';
-  static final String _finalBaseUrl = _baseUrlUbuntu;
+  static final String _baseUrlLocal = 'http://10.0.2.2:8000';
+  static final String _finalBaseUrl = _baseUrlLocal;
 
   Future getTodayOrder() async {
     Uri urlApi = Uri.parse(_finalBaseUrl + '/today_order_list');
@@ -135,7 +135,7 @@ class TodoServices {
         if (hasil.sts == 'sukses') {
           for (var row in test['data']) {
             _items_pelaksana
-                .add(DetailPelaksana(id: row['id'], name: row['pelaksana']));
+                .add(DetailPelaksana(nama: row['pelaksana'], name: row['pelaksana']));
           }
           final_items_pelaksanan = _items_pelaksana
               .map((pelaksana) =>
