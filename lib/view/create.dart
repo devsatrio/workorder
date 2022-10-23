@@ -317,32 +317,6 @@ class _CreatePageState extends State<CreatePage> {
                             SelectFormField(
                               type: SelectFormFieldType
                                   .dropdown, // or can be dialog
-                              initialValue: 'UNI.0092-EDP',
-                              items: _items,
-                              onChanged: (val) {
-                                setState(() {
-                                  unit_tujuan_order = val;
-                                });
-                              },
-                              onSaved: (val) {
-                                setState(() {
-                                  unit_tujuan_order = val;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'Unit Tujuan',
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: APP_COLOR),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.location_city_rounded,
-                                  color: APP_COLOR,
-                                ),
-                              ),
-                            ),
-                            SelectFormField(
-                              type: SelectFormFieldType
-                                  .dropdown, // or can be dialog
                               initialValue: '',
                               items: _items_barang,
                               onChanged: (val) {

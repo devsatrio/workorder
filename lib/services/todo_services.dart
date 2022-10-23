@@ -10,20 +10,20 @@ import 'package:workorder/models/unit_data.dart';
 import 'package:workorder/models/work_order_data.dart';
 
 class DetailPelaksana {
-  final String nama;
+  final String id;
   final String name;
 
   DetailPelaksana({
-    required this.nama,
+    required this.id,
     required this.name,
   });
 }
 
 class TodoServices {
   static final String _baseUrl = 'http://192.168.3.4:8000';
-  static final String _baseUrlUbuntu = 'http://192.168.222.134:8000';
+  static final String _baseUrlUbuntu = 'http://192.168.227.134:8000';
   static final String _baseUrlLocal = 'http://10.0.2.2:8000';
-  static final String _finalBaseUrl = _baseUrlLocal;
+  static final String _finalBaseUrl = _baseUrlUbuntu;
 
   Future getTodayOrder() async {
     Uri urlApi = Uri.parse(_finalBaseUrl + '/today_order_list');
@@ -135,7 +135,7 @@ class TodoServices {
         if (hasil.sts == 'sukses') {
           for (var row in test['data']) {
             _items_pelaksana
-                .add(DetailPelaksana(nama: row['pelaksana'], name: row['pelaksana']));
+                .add(DetailPelaksana(id: row['pelaksana'], name: row['pelaksana']));
           }
           final_items_pelaksanan = _items_pelaksana
               .map((pelaksana) =>
@@ -168,8 +168,7 @@ class TodoServices {
       String catatan_petugas) async {
     Uri urlApi = Uri.parse(_finalBaseUrl + '/work_order');
     String final_pelaksana = '';
-    var map1 =
-        Map.fromIterable(pelaksana, key: (e) => e.id, value: (e) => e.name);
+    var map1 =Map.fromIterable(pelaksana, key: (e) => e.id, value: (e) => e.name);
     map1.forEach((key, value) {
       final_pelaksana = final_pelaksana + ',' + value.toString();
     });

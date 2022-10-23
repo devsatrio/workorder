@@ -23,7 +23,7 @@ class _EditPageState extends State<EditPage> {
   List<Map<String, dynamic>> _items = [];
   List<Map<String, dynamic>> _items_barang = [];
   List<Object?> _selectedpelaksana = [];
-  List<Object?> _initialpelaksana = [];
+  List<DetailPelaksana> _initialpelaksana = [];
   late List<MultiSelectItem<Object?>> _items_pelaksanan = [];
   final List<Map<String, dynamic>> _items_status = [
     {'value': 'selesai', 'label': 'Selesai'},
@@ -45,24 +45,6 @@ class _EditPageState extends State<EditPage> {
   String? barang_order = '';
   String? status_pengerjaan = 'Selesai';
   late DetailWorkArg args_dua;
-
-  _yourFunction(argumenya) async {
-    List<DetailPelaksana> _items_pelaksana = [];
-    List<MultiSelectItem<Object?>> final_items_pelaksanan = [];
-    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana1, name: argumenya.pelaksana1));
-    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana2, name: argumenya.pelaksana2));
-    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana3, name: argumenya.pelaksana3));
-    _items_pelaksana.add(DetailPelaksana(nama: argumenya.pelaksana4, name: argumenya.pelaksana4));
-          
-    final_items_pelaksanan = _items_pelaksana
-        .map((pelaksana) =>
-            MultiSelectItem<DetailPelaksana>(pelaksana, pelaksana.name))
-        .toList();
-    setState(() {
-      _initialpelaksana=_items_pelaksana;
-    });
-    print(_initialpelaksana);
-  }
 
   Future getDateTime() async {
     DateTime? pickedDate = await showDatePicker(
@@ -214,6 +196,7 @@ class _EditPageState extends State<EditPage> {
 
     dataPelaksana.then((value) {
       setState(() {
+        _initialpelaksana=[DetailPelaksana(id: "candra", name: "candra")];
         _items_pelaksanan = value;
       });
     });
@@ -249,12 +232,6 @@ class _EditPageState extends State<EditPage> {
     tgl_pengerjaan.text=args.tglExecute;
     tgl_selesai.text=args.tglFinish;
     con_catatan_petugas.text = args.catatanPetugas;
-    Future.delayed(Duration.zero, () {
-          setState(() {
-            args_dua = ModalRoute.of(context)!.settings.arguments as DetailWorkArg;
-          });
-          _yourFunction(args_dua);
-        });
     return Scaffold(
       body: Stack(
         children: [
@@ -342,32 +319,6 @@ class _EditPageState extends State<EditPage> {
                               },
                               decoration: const InputDecoration(
                                 labelText: 'Unit',
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: APP_COLOR),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.location_city_rounded,
-                                  color: APP_COLOR,
-                                ),
-                              ),
-                            ),
-                            SelectFormField(
-                              type: SelectFormFieldType
-                                  .dropdown, // or can be dialog
-                              initialValue: 'UNI.0092-EDP',
-                              items: _items,
-                              onChanged: (val) {
-                                setState(() {
-                                  unit_tujuan_order = val;
-                                });
-                              },
-                              onSaved: (val) {
-                                setState(() {
-                                  unit_tujuan_order = val;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'Unit Tujuan',
                                 focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: APP_COLOR),
                                 ),
@@ -489,7 +440,7 @@ class _EditPageState extends State<EditPage> {
                             ),
                             MultiSelectDialogField(
                               items: _items_pelaksanan,
-                              initialValue: [DetailPelaksana(nama: args.pelaksana1, name: args.pelaksana1)],
+                              initialValue: _selectedpelaksana,
                               title: Row(
                                 children: const [
                                   Icon(Icons.group),
@@ -502,7 +453,7 @@ class _EditPageState extends State<EditPage> {
                                 color: APP_COLOR,
                               ),
                               buttonText: const Text(
-                                "Pilih Pelaksana",
+                                "Ubah Pelaksana",
                                 style: TextStyle(
                                   color: APP_COLOR,
                                   fontSize: 16,
@@ -521,6 +472,26 @@ class _EditPageState extends State<EditPage> {
                                 },
                               ),
                             ),
+                           _selectedpelaksana == null || _selectedpelaksana.isEmpty
+                        ? Container(
+                            padding: EdgeInsets.all(10),
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                args.pelaksana1 != ''
+                                    ? Text(args.pelaksana1)
+                                    : Text(' '),
+                                args.pelaksana2 != ''
+                                    ? Text(', ' + args.pelaksana2)
+                                    : Text(' '),
+                                args.pelaksana3 != ''
+                                    ? Text(', ' + args.pelaksana3)
+                                    : Text(' '),
+                                args.pelaksana4 != ''
+                                    ? Text(', ' + args.pelaksana4)
+                                    : Text(' '),
+                              ],),)
+                        : Container(),
                             const SizedBox(
                               height: 20.0,
                             ),
@@ -534,8 +505,7 @@ class _EditPageState extends State<EditPage> {
                                     children: [
                                       InkWell(
                                         onTap: () {
-                                          Navigator.of(context)
-                                              .pushNamed('/homepage');
+                            Navigator.of(context).pop();
                                         },
                                         child: Container(
                                           width: 130,
