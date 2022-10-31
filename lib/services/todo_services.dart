@@ -23,7 +23,7 @@ class TodoServices {
   static final String _baseUrl = 'http://192.168.3.4:8000';
   static final String _baseUrlUbuntu = 'http://192.168.227.134:8000';
   static final String _baseUrlLocal = 'http://10.0.2.2:8000';
-  static final String _finalBaseUrl = _baseUrlUbuntu;
+  static final String _finalBaseUrl = _baseUrlLocal;
 
   Future getTodayOrder() async {
     Uri urlApi = Uri.parse(_finalBaseUrl + '/today_order_list');
@@ -187,7 +187,59 @@ class TodoServices {
             "hasil": hasil,
             "tgl_finish": tgl_finish,
             "catatan_petugas": catatan_petugas,
-            "tindakan": tindakan
+          }));
+      if (response.statusCode == 200) {
+        var test = jsonDecode(response.body);
+        var hasil = logindata.fromJson(test);
+        if (hasil.sts == 'sukses') {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future Editdata(
+      String kode_wo,
+      String tgl_order,
+      String? id_unit,
+      String? tujuan,
+      String? nama_barang,
+      String detail_barang,
+      String permasalahan,
+      String tgl_execute,
+      List<Object?> pelaksana,
+      String tindakan,
+      String? hasil,
+      String tgl_finish,
+      String catatan_petugas) async{
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/work_order/update');
+    String final_pelaksana = '';
+    var map1 =Map.fromIterable(pelaksana, key: (e) => e.id, value: (e) => e.name);
+    map1.forEach((key, value) {
+      final_pelaksana = final_pelaksana + ',' + value.toString();
+    });
+    try {
+      final response = await http.post(urlApi,
+          body: ({
+            "kode_wo":kode_wo,
+            "tgl_order": tgl_order,
+            "id_unit": id_unit,
+            "tujuan": tujuan,
+            "nama_barang": nama_barang,
+            "detail_barang": detail_barang,
+            "permasalahan": permasalahan,
+            "tgl_execute": tgl_execute,
+            "pelaksana": final_pelaksana,
+            "tindakan": tindakan,
+            "hasil": hasil,
+            "tgl_finish": tgl_finish,
+            "catatan_petugas": catatan_petugas,
           }));
       if (response.statusCode == 200) {
         var test = jsonDecode(response.body);

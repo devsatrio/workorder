@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workorder/models/detail_work_arg.dart';
 import 'package:workorder/view/create.dart';
 import 'package:workorder/view/detail.dart';
 import 'package:workorder/view/edit.dart';
@@ -32,6 +33,15 @@ class _WorkOrderAppState extends State<WorkOrderApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: (settings) {
+        if (settings.name == '/edittodo') {
+          final final_args = settings.arguments as DetailWorkArg;
+          return MaterialPageRoute(
+            builder: (context) {
+              return EditPage(arg: final_args);
+            },
+          );
+        }},
       debugShowCheckedModeBanner: false,
       initialRoute: '/homepage',
       routes: {
@@ -40,7 +50,7 @@ class _WorkOrderAppState extends State<WorkOrderApp> {
         '/loginpage': (context) => LoginPage(),
         '/createpage': (context) => CreatePage(),
         '/detailtodo': (context) => detailTodo(),
-        '/edittodo':(context) => EditPage(),
+        // '/edittodo':(context) => EditPage(),
       },
     );
   }

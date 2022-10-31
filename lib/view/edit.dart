@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:workorder/constants/appcolors.dart';
 import 'package:workorder/models/detail_work_arg.dart';
 import 'package:workorder/services/todo_services.dart';
 
 class EditPage extends StatefulWidget {
-  const EditPage({Key? key}) : super(key: key);
+  final DetailWorkArg arg;
+  const EditPage({Key? key, required this.arg}) : super(key: key);
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -44,7 +46,6 @@ class _EditPageState extends State<EditPage> {
   String? unit_tujuan_order = 'UNI.0092-EDP';
   String? barang_order = '';
   String? status_pengerjaan = 'Selesai';
-  late DetailWorkArg args_dua;
 
   Future getDateTime() async {
     DateTime? pickedDate = await showDatePicker(
@@ -190,6 +191,17 @@ class _EditPageState extends State<EditPage> {
 
   @override
   void initState() {
+    con_catatan_petugas.text= widget.arg.catatanPetugas.toString();
+    con_detail_barang_order.text= widget.arg.detailBarang.toString();
+    con_permasalahan.text= widget.arg.permasalahan.toString();
+    con_tindakan.text= widget.arg.tindakan.toString();
+    tgl_pengerjaan.text = widget.arg.tglExecute.toString();
+    tgl_selesai.text=widget.arg.tglFinish.toString();
+    status_pengerjaan = widget.arg.hasil.toString();
+
+    unit_order = widget.arg.idunitorder.toString()+'-'+widget.arg.unitOrder.toString();
+    barang_order = widget.arg.namaBarang.toString();
+
     dataUnit = TodoServices().getUnit();
     dataBarang = TodoServices().getWorkList();
     dataPelaksana = TodoServices().getPelaksana();
@@ -224,14 +236,6 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as DetailWorkArg;
-    tgl_order.text=args.tglOrder;
-    con_detail_barang_order.text=args.detailBarang;
-    con_permasalahan.text = args.permasalahan;
-    con_tindakan.text=args.tindakan;
-    tgl_pengerjaan.text=args.tglExecute;
-    tgl_selesai.text=args.tglFinish;
-    con_catatan_petugas.text = args.catatanPetugas;
     return Scaffold(
       body: Stack(
         children: [
@@ -305,7 +309,7 @@ class _EditPageState extends State<EditPage> {
                             SelectFormField(
                               type: SelectFormFieldType
                                   .dropdown, // or can be dialog
-                              initialValue: args.idunitorder+ '-'+args.unitOrder,
+                              initialValue: widget.arg.idunitorder+ '-'+widget.arg.unitOrder,
                               items: _items,
                               onChanged: (val) {
                                 setState(() {
@@ -331,7 +335,7 @@ class _EditPageState extends State<EditPage> {
                             SelectFormField(
                               type: SelectFormFieldType
                                   .dropdown, // or can be dialog
-                              initialValue: args.namaBarang,
+                              initialValue: widget.arg.namaBarang,
                               items: _items_barang,
                               onChanged: (val) {
                                 setState(() {
@@ -388,6 +392,33 @@ class _EditPageState extends State<EditPage> {
                                 ),
                                 prefixIcon: Icon(
                                   Icons.sentiment_dissatisfied,
+                                  color: APP_COLOR,
+                                ),
+                              ),
+                            ),
+                            
+                            SelectFormField(
+                              type: SelectFormFieldType
+                                  .dropdown, // or can be dialog
+                              initialValue: widget.arg.hasil.toString(),
+                              items: _items_status,
+                              onChanged: (val) {
+                                setState(() {
+                                  status_pengerjaan = val;
+                                });
+                              },
+                              onSaved: (val) {
+                                setState(() {
+                                  status_pengerjaan = val;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                labelText: 'Status Pengerjaan',
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: APP_COLOR),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.turned_in_rounded,
                                   color: APP_COLOR,
                                 ),
                               ),
@@ -478,17 +509,17 @@ class _EditPageState extends State<EditPage> {
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
-                                args.pelaksana1 != ''
-                                    ? Text(args.pelaksana1)
+                                widget.arg.pelaksana1 != ''
+                                    ? Text(widget.arg.pelaksana1)
                                     : Text(' '),
-                                args.pelaksana2 != ''
-                                    ? Text(', ' + args.pelaksana2)
+                                widget.arg.pelaksana2 != ''
+                                    ? Text(', ' + widget.arg.pelaksana2)
                                     : Text(' '),
-                                args.pelaksana3 != ''
-                                    ? Text(', ' + args.pelaksana3)
+                                widget.arg.pelaksana3 != ''
+                                    ? Text(', ' + widget.arg.pelaksana3)
                                     : Text(' '),
-                                args.pelaksana4 != ''
-                                    ? Text(', ' + args.pelaksana4)
+                                widget.arg.pelaksana4 != ''
+                                    ? Text(', ' + widget.arg.pelaksana4)
                                     : Text(' '),
                               ],),)
                         : Container(),
@@ -526,6 +557,102 @@ class _EditPageState extends State<EditPage> {
                                       ),
                                       InkWell(
                                         onTap: () {
+                                          if (tgl_order.text == '' ||
+                                              unit_order == '' ||
+                                              barang_order == '' ||
+                                              con_detail_barang_order.text == '' ||
+                                              con_permasalahan.text == '' ||
+                                              con_tindakan.text == '' ||
+                                              tgl_pengerjaan.text == '' ||
+                                              status_pengerjaan == '' ||
+                                              tgl_selesai.text == '' ||
+                                              con_catatan_petugas.text == '') {
+                                            Alert(
+                                              context: context,
+                                              type: AlertType.error,
+                                              style: const AlertStyle(
+                                                isCloseButton: false,
+                                              ),
+                                              title: "Oops, Data Kosong",
+                                              desc:
+                                                  "Lengkapi semua data sebelum menyimpan",
+                                              buttons: [
+                                                DialogButton(
+                                                  color: APP_COLOR,
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                )
+                                              ],
+                                            ).show();
+                                          } else {
+                                            setState(() {
+                                              showProgress = true;
+                                            });
+                                            TodoServices()
+                                                .Editdata(
+                                                  widget.arg.idwo,
+                                                  tgl_order.text,
+                                                  unit_order,
+                                                  unit_tujuan_order,
+                                                  barang_order,
+                                                  con_detail_barang_order.text,
+                                                  con_permasalahan.text,
+                                                  tgl_pengerjaan.text,
+                                                  _selectedpelaksana,
+                                                  con_tindakan.text,
+                                                  status_pengerjaan,
+                                                  tgl_selesai.text,
+                                                  con_catatan_petugas.text)
+                                                .then((value) {
+                                              if (value) {
+                                                Alert(
+                                                        style: const AlertStyle(
+                                                          isCloseButton: false,
+                                                        ),
+                                                        context: context,
+                                                        title: "Info",
+                                                        desc:
+                                                            "Data Berhasil Diupdate")
+                                                    .show();
+                                                Navigator.of(context)
+                                                    .pushNamed('/homepage');
+                                              } else {
+                                                setState(() {
+                                                  showProgress = false;
+                                                });
+
+                                                Alert(
+                                                  context: context,
+                                                  type: AlertType.error,
+                                                  style: const AlertStyle(
+                                                    isCloseButton: false,
+                                                  ),
+                                                  title: "Oops",
+                                                  desc: "Data Gagal Disimpan",
+                                                  buttons: [
+                                                    DialogButton(
+                                                      color: APP_COLOR,
+                                                      child: const Text(
+                                                        "Cancel",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                    )
+                                                  ],
+                                                ).show();
+                                              }
+                                            });
+                                          }
                                         },
                                         child: Container(
                                           width: 130,
@@ -537,7 +664,7 @@ class _EditPageState extends State<EditPage> {
                                           ),
                                           child: const Center(
                                             child: Text(
-                                              "Simpan",
+                                              "Update",
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
