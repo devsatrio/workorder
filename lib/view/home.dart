@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   void get_data_dashboard() async {
     datadashboardtoday = TodoServices().getDashboard();
     datadashboardtoday.then((value) {
-      if (value != null){
+      if (value != null) {
         dataDashboard = value;
         setState(() {
           order_hari_ini = dataDashboard.orderToday.toString();
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 55.0),
+                          const SizedBox(height: 75.0),
                           Container(
                             alignment: Alignment.topRight,
                             child: Padding(
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Text(
                                     'Welcome Back $logindata_username To')),
                           ),
-                          SizedBox(height: 5.0),
+                          const SizedBox(height: 5.0),
                           Container(
                             alignment: Alignment.topRight,
                             child: const Padding(
@@ -127,11 +127,14 @@ class _HomePageState extends State<HomePage> {
                                       TextStyle(fontSize: 25, color: APP_COLOR),
                                 )),
                           ),
-                          SizedBox(height: 10.0),
-                          MenuDua(
-                              order_selesai_hari_ini: order_selesai_hari_ini),
-                          SizedBox(height: 5.0),
+                          const SizedBox(height: 25.0),
+                          MenuDua(order_selesai_hari_ini: order_selesai_hari_ini),
+                          const SizedBox(height: 15.0),
                           MenuSatu(order_hari_ini: order_hari_ini),
+                          const SizedBox(height: 5.0),
+                          MenuTiga(),
+                          const SizedBox(height: 5.0),
+                          
                         ],
                       ),
                     ),
@@ -140,6 +143,66 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           )),
+    );
+  }
+}
+
+class MenuTiga extends StatelessWidget {
+  const MenuTiga({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).pushNamed('/alltodo');
+      },
+      child: SizedBox(
+        child: Card(
+          color: APP_COLOR,
+          elevation: 2.0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.dashboard,
+                  color: Colors.white,
+                  size: 52.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "All To Do",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0),
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Text(
+                        "Too Many To Count",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w100),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5.0,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -155,44 +218,32 @@ class MenuDua extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 150,
+      width: double.infinity,
       child: Card(
-        color: APP_COLOR,
+        color: Colors.green,
         elevation: 2.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
-          child: Row(
+          padding: const EdgeInsets.fromLTRB(8, 25, 8, 15),
+          child: Column(
             children: [
-              const Icon(
-                Icons.mood,
-                color: Colors.white,
-                size: 52.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Finished To Do Today",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      "$order_selesai_hari_ini To Do",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w100),
-                    )
-                  ],
+              Text(
+                order_selesai_hari_ini,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 40.0,
                 ),
               ),
               const SizedBox(
-                height: 5.0,
+                height: 10.0,
+              ),
+              const Text(
+                "Finished To Do Today",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workorder/models/detail_work_arg.dart';
+import 'package:workorder/view/all_todo.dart';
 import 'package:workorder/view/create.dart';
 import 'package:workorder/view/detail.dart';
 import 'package:workorder/view/edit.dart';
@@ -50,6 +51,7 @@ class _WorkOrderAppState extends State<WorkOrderApp> {
         '/loginpage': (context) => LoginPage(),
         '/createpage': (context) => CreatePage(),
         '/detailtodo': (context) => detailTodo(),
+        '/alltodo': (context) => AllTodo(),
         // '/edittodo':(context) => EditPage(),
       },
     );
