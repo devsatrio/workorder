@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:workorder/models/all_todo_data.dart';
 import 'package:workorder/models/barang_data.dart';
 import 'package:workorder/models/dashboard_data.dart';
 import 'package:workorder/models/login_data.dart';
@@ -277,6 +278,24 @@ class TodoServices {
       }
     } catch (e) {
       return false;
+    }
+  }
+
+  Future getAllDataOrder(page_number) async{
+
+    Uri urlApi = Uri.parse(_finalBaseUrl + '/work_order/all_order?page='+page_number.toString());
+    try {
+      final response = await http.get(urlApi);
+
+      if (response.statusCode == 200) {
+        var test = jsonDecode(response.body);
+        var hasil = AllTodoData.fromJson(test);
+          return hasil;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 }
