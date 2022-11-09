@@ -208,13 +208,22 @@ class _TodayTodoState extends State<TodayTodo> {
                                               Text(listdata![index]
                                                   .namaBarang
                                                   .toString()),
-                                              Text(listdata![index]
-                                                  .permasalahan
-                                                  .toString()),
-                                              Text("Tgl Order : " +
-                                                  listdata![index]
-                                                      .tglOrder
-                                                      .toString()),
+                                              SizedBox(
+                                                  width: 200,
+                                                  child: Text(
+                                                    listdata![index]
+                                                        .permasalahan
+                                                        .toString(),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 7,
+                                                ),
+                                                Text(listdata![index]
+                                                    .tglOrder
+                                                    .toString()),
                                             ],
                                           ),
                                         ],
